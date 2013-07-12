@@ -11,7 +11,7 @@ require(data.table)
 
 ### Load tab delimited data
 
-HST_2013 <- read.delim("Data/Base_Files/Hawaii_SGP_Data_2013.txt", header=TRUE)
+Hawaii_Data_LONG_2013 <- read.csv("Data/Base_Files/Hawaii_Data_LONG_2013.txt", sep="|")
 
 
 ### Create LONG data
@@ -42,67 +42,26 @@ detach(HST_2013)
 
 ### Tidy up data
 
-# Subset out HSA test (remove Hawaiian)
-
-Hawaii_Data_LONG_2013$Test_Name[Hawaii_Data_LONG_2013$Test_Name==""] <- NA
-tmp.tests.to.remove <- c("HSA_OP-HAW-FX-Mathematics-3", "HSA_OP-HAW-FX-Mathematics-4", "HSA_OP-HAW-FX-Reading-3", "HSA_OP-HAW-FX-Reading-4")
-Hawaii_Data_LONG_2013 <- subset(Hawaii_Data_LONG_2013, !is.na(Test_Name) & !Test_Name %in% tmp.tests.to.remove)
-Hawaii_Data_LONG_2013$Test_Name <- NULL
-
-
-# Correct modify individual variables
-
-Hawaii_Data_LONG_2013$LName <- as.factor(Hawaii_Data_LONG_2013$LName)
-Hawaii_Data_LONG_2013$FName <- as.factor(Hawaii_Data_LONG_2013$FName)
-levels(Hawaii_Data_LONG_2013$LName) <- sapply(levels(Hawaii_Data_LONG_2013$LName), capwords)
-levels(Hawaii_Data_LONG_2013$FName) <- sapply(levels(Hawaii_Data_LONG_2013$FName), capwords)
-
-Hawaii_Data_LONG_2013$Sex <- as.factor(Hawaii_Data_LONG_2013$Sex)
-levels(Hawaii_Data_LONG_2013$Sex) <- c("Female", "Male")
-
-Hawaii_Data_LONG_2013$School_Admin_Rollup <- as.factor(Hawaii_Data_LONG_2013$School_Admin_Rollup)
-
-Hawaii_Data_LONG_2013$FSY <- as.factor(Hawaii_Data_LONG_2013$FSY)
+Hawaii_Data_LONG_2013$VALID_CASE <- as.character(Hawaii_Data_LONG_2013$VALID_CASE)
+Hawaii_Data_LONG_2013$Domain <- as.character(Hawaii_Data_LONG_2013$Domain)
+Hawaii_Data_LONG_2013$Year <- as.character(Hawaii_Data_LONG_2013$Year)
+Hawaii_Data_LONG_2013$Gr <- as.character(Hawaii_Data_LONG_2013$Gr)
+Hawaii_Data_LONG_2013$IDNO <- as.character(Hawaii_Data_LONG_2013$IDNO)
+Hawaii_Data_LONG_2013$Scale_Score <- as.numeric(Hawaii_Data_LONG_2013$Scale_Score)
 Hawaii_Data_LONG_2013$FSY[Hawaii_Data_LONG_2013$FSY==""] <- NA
 Hawaii_Data_LONG_2013$FSY <- droplevels(Hawaii_Data_LONG_2013$FSY)
-levels(Hawaii_Data_LONG_2013$FSY) <- c("Full School Year Status: No", "Full School Year Status: Yes")
 
-levels(Hawaii_Data_LONG_2013$Fed7_Ethnic)[which(levels(Hawaii_Data_LONG_2013$Fed7_Ethnic)=="Multiple")] <= "Two or more races"
-
-Hawaii_Data_LONG_2013$Fed5_Ethnic <- Hawaii_Data_LONG_2013$Fed7_Ethnic
-levels(Hawaii_Data_LONG_2013$Fed5_Ethnic) <- c("American Indian or Alaska Native", "Asian/Pacific Islander", "Black or African American", "Hispanic or Latino", "Asian/Pacific Islander", 
-	"Asian/Pacific Islander", "White") 
-
-levels(Hawaii_Data_LONG_2013$Disadv) <- c("Disadvantaged: No", "Disadvantaged: Yes")
-
-levels(Hawaii_Data_LONG_2013$ELL) <- c("ELL: No", "ELL: Yes")
-
-levels(Hawaii_Data_LONG_2013$SpEd) <- c("Special Education: No", "Special Education: Yes")
-
-levels(Hawaii_Data_LONG_2013$Migrant) <- c("Migrant: No", "Migrant: Yes")
-
-Hawaii_Data_LONG_2013$Scale_Score <- as.numeric(Hawaii_Data_LONG_2013$Scale_Score)
-
-Hawaii_Data_LONG_2013$Proficiency_Level <- as.factor(Hawaii_Data_LONG_2013$Proficiency_Level)
-levels(Hawaii_Data_LONG_2013$Proficiency_Level) <- c("Well Below Proficiency", "Approaches Proficiency", "Meets Proficiency", "Exceeds Proficiency")
-
-Hawaii_Data_LONG_2013$SCHOOL_ENROLLMENT_STATUS <- factor(1, levels=0:1, c("Enrolled School: No", "Enrolled School: Yes"))
-Hawaii_Data_LONG_2013$SCHOOL_ENROLLMENT_STATUS[Hawaii_Data_LONG_2013$FSY=="Full School Year Status: No"] <- "Enrolled School: No"
-
-Hawaii_Data_LONG_2013$DISTRICT_ENROLLMENT_STATUS <- factor(1, levels=0:1, c("Enrolled District: No", "Enrolled District: Yes"))
-Hawaii_Data_LONG_2013$COMPLEX_ENROLLMENT_STATUS <- factor(1, levels=0:1, c("Enrolled Complex: No", "Enrolled Complex: Yes"))
-Hawaii_Data_LONG_2013$COMPLEX_AREA_ENROLLMENT_STATUS <- factor(1, levels=0:1, c("Enrolled Complex Area: No", "Enrolled Complex Area: Yes"))
-Hawaii_Data_LONG_2013$STATE_ENROLLMENT_STATUS <- factor(1, levels=0:1, c("Enrolled State: No", "Enrolled State: Yes"))
-Hawaii_Data_LONG_2013$VALID_CASE <- "VALID_CASE"
-
+Hawaii_Data_LONG_2013$ETHNICITY <- as.character(Hawaii_Data_LONG_2013$Fed7_Ethnic)
+Hawaii_Data_LONG_2013$ETHNICITY[Hawaii_Data_LONG_2013$DOE_Ethnic %in% c("Hawaiian", "Part-Hawaiian")] <- "Native Hawaiian"
+Hawaii_Data_LONG_2013$ETHNICITY <- as.factor(Hawaii_Data_LONG_2013$ETHNICITY)
 
 
 ### Reorder variables
 
-my.variable.order <- c("VALID_CASE", "Domain", "Year", "Gr", "IDNO", "LName", "FName", "SCode_Admin_Rollup", "School_Admin_Rollup", "Sex", "DOE_Ethnic", "Fed7_Ethnic", "Fed5_Ethnic", 
-	"Disadv", "ELL", "SpEd", "Migrant", "Scale_Score", "Proficiency_Level", "FSY", "SCHOOL_ENROLLMENT_STATUS", "DISTRICT_ENROLLMENT_STATUS", "COMPLEX_ENROLLMENT_STATUS", 
-	"COMPLEX_AREA_ENROLLMENT_STATUS", "STATE_ENROLLMENT_STATUS") 
-Hawaii_Data_LONG_2013 <- Hawaii_Data_LONG_2013[,my.variable.order,with=FALSE]
+my.variable.order <- c("VALID_CASE", "Domain", "Year", "Gr", "IDNO", "LName", "FName", "SCode_Admin_Rollup", "School_Admin_Rollup", "EMH.Level", "DCode", "District", "CCode", "Complex",
+	"CACode", "Complex.Area", "Sex", "ETHNICITY", "DOE_Ethnic", "Fed7_Ethnic", "Fed5_Ethnic", "Disadv", "ELL", "ELL.Status", "SpEd", "Migrant", "Scale_Score", "Proficiency_Level", 
+	"FSY", "SCHOOL_ENROLLMENT_STATUS", "DISTRICT_ENROLLMENT_STATUS", "COMPLEX_ENROLLMENT_STATUS", "COMPLEX_AREA_ENROLLMENT_STATUS", "STATE_ENROLLMENT_STATUS") 
+Hawaii_Data_LONG_2013 <- Hawaii_Data_LONG_2013[,my.variable.order]
 
 
 ### Save results
