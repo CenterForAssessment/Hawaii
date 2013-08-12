@@ -60,7 +60,7 @@ Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER$TERMS <- Hawaii_Data_LONG_2013_INSTRUCTO
 ### Set column order
 
 setcolorder(Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER, c(1:6,8,7))
-setkeyv(Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER, c("ID", "INSTRUCTOR_NUMBER", "YEAR"))
+setkeyv(Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER, c("ID", "CONTENT_AREA", "YEAR"))
 
 
 ### Save results
