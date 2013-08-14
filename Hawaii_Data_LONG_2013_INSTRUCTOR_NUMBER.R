@@ -66,5 +66,3 @@ setkeyv(Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER, c("ID", "CONTENT_AREA", "YEAR")
 ### Save results
 
 save(Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER, file="Data/Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER.Rdata")
-
-
