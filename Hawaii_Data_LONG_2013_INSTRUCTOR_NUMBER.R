@@ -18,7 +18,7 @@ require(data.table)
 
 ### Load data
 
-Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER <- read.delim("/Users/damian/Documents/Github/Hawaii/Data/Base_Files/BFK_Cleaned_Spring_2013.txt")
+Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER <- read.delim("Data/Base_Files/BFK_Cleaned_Spring_2013.txt")
 
 
 ### Extract relevant variables
@@ -50,6 +50,19 @@ Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER <- Hawaii_Data_LONG_2013_INSTRUCTOR_NUMB
 
 Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER[,INSTRUCTOR_WEIGHT:=round(TERMS/sum(TERMS, na.rm=TRUE), digits=2), by=list(ID, CONTENT_AREA)]
 
+#########
+###
+###		From the Hawaii SGP training 2/19/2014, questions about what Josh did to create the variables 
+###		that were subsequently used to compute INSTRUCTOR_WEIGHT.
+###		How was “Sum of Days” field created in BFK_Cleaned_Spring_2013.txt ?  HI DOE will need to figure out for 2014
+###		Terms = Sum of Days / 40  (must have been done in Excel not R.  When Sums.of.Days == 20 & 100, TERMS = 1 and 1.5, but R rounds those *.5 down to 0 and 1)
+###
+###		Hawaii_2013_INSTRUCTOR_NUMBER <- data.table(read.delim("Data/Base_Files/BFK_Cleaned_Spring_2013.txt"))
+###		tmp.tbl <- Hawaii_2013_INSTRUCTOR_NUMBER[, as.list(summary(Sum.of.Days)), by=Terms]
+###		setkeyv(tmp.tbl, 'Terms')
+###		tmp.tbl
+###
+#########
 
 ### NULL out extraneous variables
 
