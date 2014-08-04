@@ -23,7 +23,8 @@ Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER <- read.delim("Data/Base_Files/BFK_Clean
 
 ### Extract relevant variables
 
-Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER <- as.data.table(Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER[,c(1,2,3,5,7,9,10,14,18,20)])
+variables.to.use <- c("StaffUniqueID", "StaffLastName", "StaffFirstName", "SchoolCode", "SchoolName", "SubjectName", "RosterStatus", "StateStudentID", "StudentGradeLevel", "Terms")
+Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER <- as.data.table(Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER[,variables.to.use])
 
 
 ### Tidy up data 
