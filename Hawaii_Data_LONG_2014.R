@@ -57,11 +57,16 @@ Hawaii_Data_LONG_2014$COMPLEX_AREA_ENROLLMENT_STATUS <- as.factor(Hawaii_Data_LO
 Hawaii_Data_LONG_2014$FSY_SchCode[Hawaii_Data_LONG_2014$FSY_SchCode="NULL"] <- NA
 Hawaii_Data_LONG_2014$FSY_SchCode <- as.integer(Hawaii_Data_LONG_2014$FSY_SchCode)
 
+Hawaii_Data_LONG_2013$HIGH_NEEDS_STATUS_DEMOGRAPHIC <- 
+        factor(2, levels=1:2, labels=c("High Need Status: ELL, Special Education, or Disadvantaged Student", "High Need Status: Non-ELL, Non-Special Education, and Non-Disadvantaged Student"))
+HawaiI_Data_LONG_2013$HIGH_NEEDS_STATUS_DEMOGRAPHIC[HawaiI_Data_LONG_2013$DISADVANTAGED_STATUS=="Disadvantaged: Yes" | HawaiI_Data_LONG_2013$ELL_STATUS=="ELL Status: Yes" | Hawaii_SGP@Data$SPECIAL_EDUCATION_STATUS=="Special Education: Yes"] <- "High Need Status: ELL, Special Education, or Disadvantaged Student"
+
 ### Reorder variables
 
 my.variable.order <- c("VALID_CASE", "Domain", "Year", "Gr", "IDNO", "LName", "FName", "SCode_Admin_Rollup", "School_Admin_Rollup", "FSY_SchCode", "EMH.Level", "DCode", "District", "CCode", "Complex",
-	"CACode", "Complex.Area", "Sex", "ETHNICITY", "DOE_Ethnic", "Fed7_Ethnic", "Fed5_Ethnic", "Disadv", "ELL", "ELL_STATUS_MULTILEVEL", "SpEd", "Migrant", "Scale_Score", "Proficiency_Level", 
-	"FSY", "SCHOOL_ENROLLMENT_STATUS", "DISTRICT_ENROLLMENT_STATUS", "COMPLEX_ENROLLMENT_STATUS", "COMPLEX_AREA_ENROLLMENT_STATUS", "STATE_ENROLLMENT_STATUS") 
+	"CACode", "Complex.Area", "Sex", "ETHNICITY", "HIGH_NEEDS_STATUS_DEMOGRAPHIC", "DOE_Ethnic", "Fed7_Ethnic", "Fed5_Ethnic", "Disadv", "ELL", "ELL_STATUS_MULTILEVEL", "SpEd", 
+	"Migrant", "Scale_Score", "Proficiency_Level", "FSY", "SCHOOL_ENROLLMENT_STATUS", "DISTRICT_ENROLLMENT_STATUS", "COMPLEX_ENROLLMENT_STATUS", "COMPLEX_AREA_ENROLLMENT_STATUS", 
+	"STATE_ENROLLMENT_STATUS") 
 setcolorder(Hawaii_Data_LONG_2014, my.variable.order)
 
 
