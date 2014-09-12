@@ -49,7 +49,7 @@ Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER <- Hawaii_Data_LONG_2013_INSTRUCTOR_NUMB
 
 ### Create Weight Variable
 
-Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER[,INSTRUCTOR_WEIGHT:=round(TERMS/sum(TERMS, na.rm=TRUE), digits=2), by=list(ID, CONTENT_AREA)]
+#Hawaii_Data_LONG_2013_INSTRUCTOR_NUMBER[,INSTRUCTOR_WEIGHT:=round(TERMS/sum(TERMS, na.rm=TRUE), digits=2), by=list(ID, CONTENT_AREA)]
 
 #########
 ###
