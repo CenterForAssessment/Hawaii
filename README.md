@@ -1,5 +1,5 @@
 Hawaii
-========
+======
 
 SGP analysis source code & documentation
 -----------------------------------------
