@@ -21,7 +21,7 @@ load("Data/Hawaii_Data_LONG_2015.Rdata")
 Hawaii_SGP <- updateSGP(
 			Hawaii_SGP,
 			Hawaii_Data_LONG_2015,
-#			Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER,
+			Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER,
 			sgp.percentiles.equated=TRUE,
 			sgPlot.demo.report=TRUE,
 			parallel.config=list(BACKEND="PARALLEL", WORKERS=list(PERCENTILES=4,  PROJECTIONS=4, LAGGED_PROJECTIONS=4, SUMMARY=4, GA_PLOTS=4, SG_PLOTS=1)))
@@ -29,4 +29,4 @@ Hawaii_SGP <- updateSGP(
 
 ### Save results
 
-##save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
+save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
