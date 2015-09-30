@@ -12,18 +12,31 @@ require(data.table)
 
 ### Load data
 
-Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER <- fread("Data/Base_Files/BFK_Cleaned_Spring_2015.txt", colClasses=rep("character", 9))
+Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER <- fread("Data/Base_Files/BFK_Cleaned_Spring_2015.txt", colClasses=rep("character", 13))
+
+
+### Remove duplicates
+
+setkeyv(Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER, names(Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER))
+Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER <- Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER[!duplicated(Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER)]
+
+
+### Extract relevant variables
+
+variables.to.use <- c("StaffUniqueID", "StaffLastName", "StaffFirstName", "SchoolName", "SchoolCode_[NEW]", "SubjectName", "StateStudentID", "rounded_terms")
+Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER <- Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER[,variables.to.use, with=FALSE]
+
 
 
 ### Tidy up data
 
 setnames(Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER,
 	names(Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER),
-	c("INSTRUCTOR_NUMBER", "INSTRUCTOR_LAST_NAME", "INSTRUCTOR_FIRST_NAME", "SCHOOL_NAME_INSTRUCTOR", "SCHOOL_NUMBER_INSTRUCTOR", "CONTENT_AREA", "CLASS_NAME", "ID",  "TERMS"))
+	c("INSTRUCTOR_NUMBER", "INSTRUCTOR_LAST_NAME", "INSTRUCTOR_FIRST_NAME", "SCHOOL_NAME_INSTRUCTOR", "SCHOOL_NUMBER_INSTRUCTOR", "CONTENT_AREA", "ID",  "TERMS"))
 Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER$YEAR <- "2015"
 setcolorder(Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER,
 		c("ID","CONTENT_AREA", "YEAR", "INSTRUCTOR_NUMBER", "INSTRUCTOR_LAST_NAME", "INSTRUCTOR_FIRST_NAME", "SCHOOL_NUMBER_INSTRUCTOR", "SCHOOL_NAME_INSTRUCTOR",
-		 	"CLASS_NAME", "TERMS" ))
+		 	"TERMS" ))
 
 Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER[CONTENT_AREA=="Math", CONTENT_AREA:="MATHEMATICS"]
 Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER[CONTENT_AREA=="ELA", CONTENT_AREA:="READING"]
@@ -49,7 +62,6 @@ Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER[,INSTRUCTOR_WEIGHT:=round(TERMS/sum(TERM
 ### NULL out extraneous variables
 
 Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER[,TERMS:=NULL]
-Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER[,CLASS_NAME:=NULL]
 
 
 ### Set column order
