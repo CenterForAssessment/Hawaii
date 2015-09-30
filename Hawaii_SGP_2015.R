@@ -13,7 +13,7 @@ require(SGP)
 
 load("Data/Hawaii_SGP.Rdata")
 load("Data/Hawaii_Data_LONG_2015.Rdata")
-#load("Data/Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER.Rdata")
+load("Data/Hawaii_Data_LONG_2015_INSTRUCTOR_NUMBER.Rdata")
 
 
 ### Update SGPs
