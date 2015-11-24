@@ -12,7 +12,7 @@ require(SGP)
 ### Load previous SGP object and 2013 data
 
 load("Data/Hawaii_SGP.Rdata")
-load("Data/Hawaii_Data_LONG_2013_ADDITIONAL_CASES.Rdata")
+load("Data/Hawaii_Data_LONG_2013_UPDATE.Rdata")
 
 
 ### Update SGPs
