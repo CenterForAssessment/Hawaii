@@ -1,0 +1,17 @@
+base
+rJava
+xlsxjars
+xlsx
+data.table
+SGP
+plyr
+ggplot2
+nlme
+mgcv
+rmarkdown
+SGPreports
+Rcpp
+htmlTable
+Gmisc
+ztable
+networkD3
