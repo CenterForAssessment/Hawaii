@@ -41,7 +41,6 @@ levels(Hawaii_Data_LONG_2015$Complex)[c(21,24,38)] <- paste(levels(Hawaii_Data_L
 levels(Hawaii_Data_LONG_2015$Complex) <- as.vector(sapply(sapply(strsplit(sapply(levels(Hawaii_Data_LONG_2015$Complex), capwords), " "), head, -1), paste, collapse=" "))
 levels(Hawaii_Data_LONG_2015$Complex)[29] <- "McKinley"
 Hawaii_Data_LONG_2015[,Complex.Area:=as.factor(Complex.Area)]
-levels(Hawaii_Data_LONG_2015$Complex.Area)[8] <- "Hilo-Laupahoehoe-Waiakea"
 Hawaii_Data_LONG_2015[,Sex:=as.factor(Sex)]
 Hawaii_Data_LONG_2015[,ELL_STATUS_MULTILEVEL:=as.factor(ELL_STATUS_MULTILEVEL)]
 Hawaii_Data_LONG_2015[,School_Admin_Rollup:=as.factor(School_Admin_Rollup)]
@@ -49,8 +48,11 @@ Hawaii_Data_LONG_2015[,District:=as.factor(District)]
 Hawaii_Data_LONG_2015[,STATE_ENROLLMENT_STATUS:=as.factor(STATE_ENROLLMENT_STATUS)]
 Hawaii_Data_LONG_2015[,SCHOOL_ENROLLMENT_STATUS:=as.factor(SCHOOL_ENROLLMENT_STATUS)]
 Hawaii_Data_LONG_2015[,DISTRICT_ENROLLMENT_STATUS:=as.factor(DISTRICT_ENROLLMENT_STATUS)]
+Hawaii_Data_LONG_2015[FSY=="Full School Year Status: No",DISTRICT_ENROLLMENT_STATUS:="Enrolled District: No"]
 Hawaii_Data_LONG_2015[,COMPLEX_ENROLLMENT_STATUS:=as.factor(COMPLEX_ENROLLMENT_STATUS)]
+Hawaii_Data_LONG_2015[FSY=="Full School Year Status: No",COMPLEX_ENROLLMENT_STATUS:="Enrolled Complex: No"]
 Hawaii_Data_LONG_2015[,COMPLEX_AREA_ENROLLMENT_STATUS:=as.factor(COMPLEX_AREA_ENROLLMENT_STATUS)]
+Hawaii_Data_LONG_2015[FSY=="Full School Year Status: No",COMPLEX_AREA_ENROLLMENT_STATUS:="Enrolled Complex Area: No"]
 Hawaii_Data_LONG_2015[,FSY_SchCode:=as.integer(FSY_SchCode)]
 
 Hawaii_Data_LONG_2015[,HIGH_NEED_STATUS_DEMOGRAPHIC:=
