@@ -75,4 +75,4 @@ setcolorder(Hawaii_Data_LONG_2016, my.variable.order)
 
 ### Save results
 
-#save(Hawaii_Data_LONG_2016, file="Data/Hawaii_Data_LONG_2016.Rdata")
+save(Hawaii_Data_LONG_2016, file="Data/Hawaii_Data_LONG_2016.Rdata")
