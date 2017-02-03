@@ -29,7 +29,7 @@ Hawaii_SGP <- updateSGP(
 			Hawaii_SGP,
 			Hawaii_Data_LONG_2016,
 			Hawaii_Data_LONG_2016_INSTRUCTOR_NUMBER,
-			steps=c("prepareSGP", "analyzeSGP", "combineSGP", "summarizeSGP"),
+			steps=c("prepareSGP", "analyzeSGP", "combineSGP", "summarizeSGP", "outputSGP"),
 			sgp.percentiles.baseline=FALSE,
 			sgp.projections.baseline=FALSE,
 			sgp.projections.lagged.baseline=FALSE,
@@ -42,4 +42,4 @@ Hawaii_SGP <- updateSGP(
 
 ### Save results
 
-#save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
+save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
