@@ -13,7 +13,7 @@ require(SGP)
 
 load("Data/Hawaii_SGP.Rdata")
 load("Data/Hawaii_Data_LONG_2017.Rdata")
-load("Data/Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER.Rdata")
+#load("Data/Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER.Rdata")
 
 
 ### Load configurations
@@ -28,7 +28,7 @@ HI_CONFIG <- c(READING_2017.config, MATHEMATICS_2017.config)
 Hawaii_SGP <- updateSGP(
 			Hawaii_SGP,
 			Hawaii_Data_LONG_2017,
-			Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER,
+#			Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER,
 			steps=c("prepareSGP", "analyzeSGP", "combineSGP", "summarizeSGP", "outputSGP"),
 			sgp.percentiles.baseline=FALSE,
 			sgp.projections.baseline=FALSE,

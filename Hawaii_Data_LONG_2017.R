@@ -12,7 +12,7 @@ require(data.table)
 ### Load tab delimited data
 
 Hawaii_Data_LONG_2017_1 <- fread("Data/Base_Files/Hawaii_Data_LONG_2017_Prep.txt", colClasses=rep("character", 34))
-Hawaii_Data_LONG_2017_2 <- fread("Data/Base_Files/Hawaii_Data_LONG_2017_Courtesy_Tested Prep.txt", colClasses=rep("character", 34))
+Hawaii_Data_LONG_2017_2 <- fread("Data/Base_Files/Hawaii_Data_LONG_2017_Courtesy_Tested_Prep.txt", colClasses=rep("character", 34))
 Hawaii_Data_LONG_2017 <- rbindlist(list(Hawaii_Data_LONG_2017_1, Hawaii_Data_LONG_2017_2))
 
 
@@ -22,7 +22,7 @@ setnames(Hawaii_Data_LONG_2017, c("Valid_Case", "year", "grade", "lastName", "fi
 	c("VALID_CASE", "Year", "Gr", "LName", "FName", "EMH.Level", "ELL_STATUS_MULTILEVEL", "Complex.Area"))
 Hawaii_Data_LONG_2017[,VALID_CASE:="VALID_CASE"]
 Hawaii_Data_LONG_2017[,Gr:=as.character(as.numeric(Gr))]
-Hawaii_Data_LONG_2017[Gr %in% c("1", "2", "9"), VALID_CASE:="INVALID_CASE"]
+Hawaii_Data_LONG_2017[Gr %in% c("1", "2", "9", "10", "91"), VALID_CASE:="INVALID_CASE"]
 Hawaii_Data_LONG_2017[,DOE_Ethnic:=as.character(DOE_Ethnic)]
 Hawaii_Data_LONG_2017[,Fed7_Ethnic:=as.factor(Fed7_Ethnic)]
 Hawaii_Data_LONG_2017[,Fed5_Ethnic:=as.factor(Fed5_Ethnic)]
