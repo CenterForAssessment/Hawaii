@@ -12,8 +12,8 @@ require(data.table)
 
 ### Load data
 
-Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER <- fread("Data/Base_Files/BFK_Cleaned_Spring_2017.txt", colClasses=rep("character", 58))
-setnames(Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER, c("_ of Days"), c("SumOfRosterableDays"))
+Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER <- fread("Data/Base_Files/BFK_Cleaned_Spring_2017.txt", colClasses=rep("character", 69))
+setnames(Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER, c("Sum"), c("SumOfRosterableDays"))
 
 ### Extract relevant variables
 
@@ -39,6 +39,7 @@ setcolorder(Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER,
 
 Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER[CONTENT_AREA=="Math", CONTENT_AREA:="MATHEMATICS"]
 Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER[CONTENT_AREA=="ELA", CONTENT_AREA:="READING"]
+Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER <- Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER[CONTENT_AREA %in% c("MATHEMATICS", "READING")]
 Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER[, INSTRUCTOR_ENROLLMENT_STATUS :=factor(1, levels=0:1, labels=c("Enrolled Instructor: No", "Enrolled Instructor: Yes"))]
 Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER[,SUM_OF_DAYS:=as.numeric(SUM_OF_DAYS)]
 Hawaii_Data_LONG_2017_INSTRUCTOR_NUMBER[,INSTRUCTOR_LAST_NAME:=as.factor(INSTRUCTOR_LAST_NAME)]
