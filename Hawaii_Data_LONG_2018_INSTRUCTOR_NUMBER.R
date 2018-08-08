@@ -13,7 +13,7 @@ require(data.table)
 ### Load data
 
 Hawaii_Data_LONG_2018_INSTRUCTOR_NUMBER <- fread("Data/Base_Files/BFK_Cleaned_Spring_2018.txt", colClasses=rep("character", 51))
-setnames(Hawaii_Data_LONG_2018_INSTRUCTOR_NUMBER, c("SGP_ALL.schoolCode", "_ of days"), c("SchoolCode", "SumOfRosterableDays"))
+setnames(Hawaii_Data_LONG_2018_INSTRUCTOR_NUMBER, c("SGP_ALL.schoolCode", "sum of days"), c("SchoolCode", "SumOfRosterableDays"))
 
 ### Extract relevant variables
 
