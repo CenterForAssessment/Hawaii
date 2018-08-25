@@ -10,16 +10,16 @@ require(SGP)
 require(data.table)
 
 
-### INVALIDATE 2018 records from SCHOOL_NUMBER 552
+### INVALIDATE 2017 records from SCHOOL_NUMBER 552
 
-#load("Data/Hawaii_SGP.Rdata")
-#tmp <- Hawaii_SGP@Data
-#tmp[SCHOOL_NUMBER=="552" & YEAR=="2018", VALID_CASE:="INVALID_CASE"]
-#tmp[, SGP_NOTE:=as.character(NA)]
-#tmp[SCHOOL_NUMBER=="552" & YEAR=="2018", SGP_NOTE:="All student records in School 552 invalidated for 2018 due to a data breach."]
-#Hawaii_SGP@Data <- tmp
-#Hawaii_SGP <- prepareSGP(Hawaii_SGP)
-#save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
+load("Data/Hawaii_SGP.Rdata")
+tmp <- Hawaii_SGP@Data
+tmp[SCHOOL_NUMBER=="552" & YEAR=="2017", VALID_CASE:="INVALID_CASE"]
+tmp[, SGP_NOTE:=as.character(NA)]
+tmp[SCHOOL_NUMBER=="552" & YEAR=="2017", SGP_NOTE:="All student records in School 552 invalidated for 2017 due to a data breach."]
+Hawaii_SGP@Data <- tmp
+Hawaii_SGP <- prepareSGP(Hawaii_SGP)
+save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
 
 
 ### Load tab delimited data
