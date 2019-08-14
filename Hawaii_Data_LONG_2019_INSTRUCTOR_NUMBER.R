@@ -12,8 +12,8 @@ require(data.table)
 
 ### Load data
 
-Hawaii_Data_LONG_2019_INSTRUCTOR_NUMBER <- fread("Data/Base_Files/BFK_Cleaned_Spring_2019.txt", colClasses=rep("character", 51))
-setnames(Hawaii_Data_LONG_2019_INSTRUCTOR_NUMBER, c("SGP_ALL.schoolCode", "∑ of days"), c("SchoolCode", "SumOfRosterableDays"))
+Hawaii_Data_LONG_2019_INSTRUCTOR_NUMBER <- fread("Data/Base_Files/BFK_Cleaned_Spring_2019.txt", colClasses=rep("character", 77))
+setnames(Hawaii_Data_LONG_2019_INSTRUCTOR_NUMBER, "SUM OF DAYS with June Correction", "SumOfRosterableDays")
 
 ### Extract relevant variables
 
