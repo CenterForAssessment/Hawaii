@@ -1,6 +1,6 @@
 ###########################################################
 ###
-### Hawaii SGP Analysis for 2018
+### Hawaii SGP Analysis for 2019
 ###
 ###########################################################
 
@@ -9,26 +9,26 @@
 require(SGP)
 
 
-### Load previous SGP object and 2018 data
+### Load previous SGP object and 2019 data
 
 load("Data/Hawaii_SGP.Rdata")
-load("Data/Hawaii_Data_LONG_2018.Rdata")
-load("Data/Hawaii_Data_LONG_2018_INSTRUCTOR_NUMBER.Rdata")
+load("Data/Hawaii_Data_LONG_2019.Rdata")
+load("Data/Hawaii_Data_LONG_2019_INSTRUCTOR_NUMBER.Rdata")
 
 
 ### Load configurations
 
-source("SGP_CONFIG/2018/READING.R")
-source("SGP_CONFIG/2018/MATHEMATICS.R")
+source("SGP_CONFIG/2019/READING.R")
+source("SGP_CONFIG/2019/MATHEMATICS.R")
 
-HI_CONFIG <- c(READING_2018.config, MATHEMATICS_2018.config)
+HI_CONFIG <- c(READING_2019.config, MATHEMATICS_2019.config)
 
 ### Update SGPs
 
 Hawaii_SGP <- updateSGP(
 			Hawaii_SGP,
-			Hawaii_Data_LONG_2018,
-			Hawaii_Data_LONG_2018_INSTRUCTOR_NUMBER,
+			Hawaii_Data_LONG_2019,
+			Hawaii_Data_LONG_2019_INSTRUCTOR_NUMBER,
 			steps=c("prepareSGP", "analyzeSGP", "combineSGP", "summarizeSGP", "outputSGP"),
 			sgp.percentiles.baseline=FALSE,
 			sgp.projections.baseline=FALSE,
