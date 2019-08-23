@@ -10,52 +10,42 @@ require(SGP)
 require(data.table)
 
 
-### INVALIDATE 2017 records from SCHOOL_NUMBER 552
-
-#load("Data/Hawaii_SGP.Rdata")
-#tmp <- Hawaii_SGP@Data
-#tmp[SCHOOL_NUMBER=="552" & YEAR=="2017", VALID_CASE:="INVALID_CASE"]
-#tmp[, SGP_NOTE:=as.character(NA)]
-#tmp[SCHOOL_NUMBER=="552" & YEAR=="2017", SGP_NOTE:="All student records in School 552 invalidated for 2017 due to a data breach."]
-#Hawaii_SGP@Data <- tmp
-#Hawaii_SGP <- prepareSGP(Hawaii_SGP)
-#save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
-
-
 ### Load tab delimited data
 
 #Hawaii_Data_LONG_2019_1 <- fread("Data/Base_Files/Hawaii_Data_LONG_2019_Prep.txt", colClasses=rep("character", 34))
-#Hawaii_Data_LONG_2019_2 <- fread("Data/Base_Files/Hawaii_Data_LONG_2019_Courtesy_Tested_Prep.txt", colClasses=rep("character", 34))
+#Hawaii_Data_LONG_2019_2 <- fread("Data/Base_Files/Hawaii_Data_LONG_2019_Prep_Courtesy.txt", colClasses=rep("character", 34))
 #Hawaii_Data_LONG_2019 <- rbindlist(list(Hawaii_Data_LONG_2019_1, Hawaii_Data_LONG_2019_2))
-Hawaii_Data_LONG_2019 <- fread("Data/Base_Files/Hawaii_Data_LONG_2019_Prep_all_v2.txt")
+Hawaii_Data_LONG_2019 <- fread("Data/Base_Files/Hawaii_Data_LONG_2019_Prep_All.txt")
 
 
 ### Tidy up data
 
-setnames(Hawaii_Data_LONG_2019, c("Valid_Case", "year", "grade", "lastName", "firstName", "EMH Level", "ELL Status", "Complex Area"),
-	c("VALID_CASE", "Year", "Gr", "LName", "FName", "EMH.Level", "ELL_STATUS_MULTILEVEL", "Complex.Area"))
+setnames(Hawaii_Data_LONG_2019, c("Valid_Case", "grade", "lastName", "firstName", "EMH Level", "ELL Status", "Complex Area"),
+	c("VALID_CASE", "Gr", "LName", "FName", "EMH.Level", "ELL_STATUS_MULTILEVEL", "Complex.Area"))
 Hawaii_Data_LONG_2019[,VALID_CASE:="VALID_CASE"]
 Hawaii_Data_LONG_2019[,Gr:=as.character(as.numeric(Gr))]
-Hawaii_Data_LONG_2019[Gr %in% c("1", "2", "9", "12"), VALID_CASE:="INVALID_CASE"]
+Hawaii_Data_LONG_2019[Gr %in% c("2", "9", "91"), VALID_CASE:="INVALID_CASE"]
 Hawaii_Data_LONG_2019[,DOE_Ethnic:=as.character(DOE_Ethnic)]
 Hawaii_Data_LONG_2019[,Fed7_Ethnic:=as.factor(Fed7_Ethnic)]
+levels(Hawaii_Data_LONG_2019$Fed7_Ethnic)[3] <- "Black or African American"
 Hawaii_Data_LONG_2019[,Fed5_Ethnic:=as.factor(Fed5_Ethnic)]
 Hawaii_Data_LONG_2019[,Disadv:=as.factor(Disadv)]
+levels(Hawaii_Data_LONG_2019$Disadv) <- c("Disadvantaged: No", "Disadvantaged: Yes")
 Hawaii_Data_LONG_2019[,ELL:=as.factor(ELL)]
+levels(Hawaii_Data_LONG_2019$ELL) <- c("ELL: No", "ELL: Yes")
 Hawaii_Data_LONG_2019[,SpEd:=as.factor(SpEd)]
 Hawaii_Data_LONG_2019[,Migrant:=as.factor(Migrant)]
 Hawaii_Data_LONG_2019[,Scale_Score:=as.numeric(Scale_Score)]
 Hawaii_Data_LONG_2019[,FSY:=as.factor(FSY)]
 Hawaii_Data_LONG_2019[,ETHNICITY:=as.character(Fed7_Ethnic)]
 Hawaii_Data_LONG_2019[DOE_Ethnic %in% c("Native Hawaiian", "Part-Hawaiian"), ETHNICITY:="Native Hawaiian"]
-Hawaii_Data_LONG_2019[,ETHNICITY:=as.factor(Hawaii_Data_LONG_2019$ETHNICITY)]
+Hawaii_Data_LONG_2019[,ETHNICITY:=as.factor(ETHNICITY)]
 levels(Hawaii_Data_LONG_2019$ETHNICITY)[c(3,4)] <- c("Black or African American", "Hispanic or Latino")
 Hawaii_Data_LONG_2019[District=="Charter", District:="Charter Schools"]
 Hawaii_Data_LONG_2019[,Complex:=as.factor(Hawaii_Data_LONG_2019$Complex)]
 levels(Hawaii_Data_LONG_2019$Complex) <- as.vector(sapply(levels(Hawaii_Data_LONG_2019$Complex), capwords))
 levels(Hawaii_Data_LONG_2019$Complex)[c(21,24)] <- paste(levels(Hawaii_Data_LONG_2019$Complex)[c(21,24)], "Complex")
-levels(Hawaii_Data_LONG_2019$Complex) <- as.vector(sapply(sapply(strsplit(sapply(levels(Hawaii_Data_LONG_2019$Complex), capwords), " "), head, -1), paste, collapse=" "))
-levels(Hawaii_Data_LONG_2019$Complex)[29] <- "McKinley"
+levels(Hawaii_Data_LONG_2019$Complex)[29] <- "McKinley Complex"
 Hawaii_Data_LONG_2019[,Complex.Area:=as.factor(Complex.Area)]
 Hawaii_Data_LONG_2019[,Sex:=as.factor(Sex)]
 Hawaii_Data_LONG_2019[,ELL_STATUS_MULTILEVEL:=as.factor(ELL_STATUS_MULTILEVEL)]
