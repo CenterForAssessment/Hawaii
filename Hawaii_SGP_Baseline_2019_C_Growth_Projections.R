@@ -11,8 +11,7 @@ require(SGP)
 load("Data/Hawaii_SGP.Rdata")
 
 ###   Add single-cohort baseline matrices to SGPstateData
-load("Data/HI_Baseline_Matrices.Rdata")
-SGPstateData[["HI"]][["Baseline_splineMatrix"]][["Coefficient_Matrices"]] <- HI_Baseline_Matrices
+SGPstateData <- SGPmatrices::addBaselineMatrices("HI", "2021")
 
 ###   Read in BASELINE projections configuration scripts and combine
 source("SGP_CONFIG/2019/BASELINE/Projections/READING.R")

@@ -9,11 +9,14 @@ require(SGP)
 
 ###   Load data and remove years that will not be used.
 load("Data/Hawaii_SGP_LONG_Data.Rdata")
-Hawaii_Data_LONG <- data.table::data.table(Hawaii_SGP_LONG_Data[YEAR > 2015, ]) 
+
+### Test for BASELINE related variable in LONG data and NULL out if they exist
+if (length(tmp.names <- grep("BASELINE|SS", names(Hawaii_SGP_LONG_Data))) > 0) {
+		Hawaii_SGP_LONG_Data[,eval(tmp.names):=NULL]
+}
 
 ###   Add single-cohort baseline matrices to SGPstateData
-load("Data/HI_Baseline_Matrices.Rdata")
-SGPstateData[["HI"]][["Baseline_splineMatrix"]][["Coefficient_Matrices"]] <- HI_Baseline_Matrices
+SGPstateData <- SGPmatrices::addBaselineMatrices("HI", "2021")
 
 ###   Read in BASELINE percentiles configuration scripts and combine
 source("SGP_CONFIG/2019/BASELINE/Percentiles/READING.R")
