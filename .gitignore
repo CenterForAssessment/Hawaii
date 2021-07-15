@@ -1,3 +1,4 @@
+
 .Rapp.history
 .DS_Store
 .Rhistory
@@ -8,3 +9,4 @@
 /Visualizations
 /Goodness_of_Fit
 /Logs
+/Misc
