@@ -73,6 +73,10 @@ my.variable.order <- c("VALID_CASE", "Domain", "Year", "Gr", "IDNO", "LName", "F
 	"STATE_ENROLLMENT_STATUS", "SCHOOL_FSY_ENROLLMENT_STATUS")
 setcolorder(Hawaii_Data_LONG_2021, my.variable.order)
 
+### Check for duplicates
+setkey(Hawaii_Data_LONG_2021, VALID_CASE, Year, Domain, Gr, IDNO, Scale_Score)
+setkey(Hawaii_Data_LONG_2021, VALID_CASE, Year, Domain, Gr, IDNO)
+Hawaii_Data_LONG_2021[which(duplicated(Hawaii_Data_LONG_2021, by=key(Hawaii_Data_LONG_2021)))-1, VALID_CASE:="INVALID_CASE"]
 
 ### Save results
 

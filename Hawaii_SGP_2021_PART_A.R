@@ -9,7 +9,7 @@ require(SGP)
 require(SGPmatrices)
 
 ###   Load data
-load("Data/Hawaii_SGP.Rdata"))
+load("Data/Hawaii_SGP.Rdata")
 load("Data/Hawaii_Data_LONG_2021.Rdata")
 
 ###   Add Baseline matrices to SGPstateData
@@ -32,7 +32,7 @@ Hawaii_SGP <- updateSGP(
         what_sgp_object = Hawaii_SGP,
         with_sgp_data_LONG = Hawaii_Data_LONG_2021,
         steps = c("prepareSGP", "analyzeSGP", "combineSGP"),
-        sgp.config = IN_CONFIG,
+        sgp.config = HI_CONFIG,
         sgp.percentiles = TRUE,
         sgp.projections = FALSE,
         sgp.projections.lagged = FALSE,
@@ -44,4 +44,4 @@ Hawaii_SGP <- updateSGP(
 )
 
 ###   Save results
-save(Hawaii_SGP, file="Hawaii_SGP.Rdata"))
+#save(Hawaii_SGP, file="Hawaii_SGP.Rdata")

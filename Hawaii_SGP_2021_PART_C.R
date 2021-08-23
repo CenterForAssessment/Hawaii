@@ -9,7 +9,7 @@ require(SGP)
 require(SGPmatrices)
 
 ###   Load data
-load("Data/Hawaii_SGP.Rdata"))
+load("Data/Hawaii_SGP.Rdata")
 
 ###   Load configurations
 source("SGP_CONFIG/2021/PART_C/READING.R")
@@ -87,4 +87,4 @@ Hawaii_SGP <- abcSGP(
 
 
 ###  Save results
-save(Hawaii_SGP, "Data/Hawaii_SGP.Rdata"))
+save(Hawaii_SGP, "Data/Hawaii_SGP.Rdata")
