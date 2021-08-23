@@ -25,7 +25,7 @@ HI_CONFIG <- c(READING_2021.config, MATHEMATICS_2021.config)
 parallel.config <- list(BACKEND="PARALLEL", WORKERS=list(PERCENTILES=4, BASELINE_PERCENTILES=4, PROJECTIONS=4, LAGGED_PROJECTIONS=4, SGP_SCALE_SCORE_TARGETS=4))
 
 #####
-###   Run updateSGP :which(x, arr.ind = FALSE, useNames = TRUE)analysis
+###   Run updateSGP analysis
 #####
 
 Hawaii_SGP <- updateSGP(
@@ -44,4 +44,4 @@ Hawaii_SGP <- updateSGP(
 )
 
 ###   Save results
-#save(Hawaii_SGP, file="Hawaii_SGP.Rdata")
+save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")

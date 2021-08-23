@@ -20,6 +20,8 @@ Hawaii_Data_LONG_2021 <- fread("Data/Base_Files/Hawaii_Data_LONG_2021.txt")
 setnames(Hawaii_Data_LONG_2021, c("Valid_Case", "grade", "lastName", "firstName", "EMH Level", "ELL Status", "Complex Area"),
 	c("VALID_CASE", "Gr", "LName", "FName", "EMH.Level", "ELL_STATUS_MULTILEVEL", "Complex.Area"))
 Hawaii_Data_LONG_2021[,VALID_CASE:="VALID_CASE"]
+Hawaii_Data_LONG_2021[,Year:=as.character(Year)]
+Hawaii_Data_LONG_2021[,IDNO:=as.character(IDNO)]
 Hawaii_Data_LONG_2021[,Gr:=as.character(as.numeric(Gr))]
 Hawaii_Data_LONG_2021[Gr %in% c("2", "9", "91"), VALID_CASE:="INVALID_CASE"]
 Hawaii_Data_LONG_2021[,DOE_Ethnic:=as.character(DOE_Ethnic)]
