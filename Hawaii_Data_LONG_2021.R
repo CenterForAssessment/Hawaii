@@ -13,6 +13,8 @@ require(data.table)
 ### Load tab delimited data
 
 Hawaii_Data_LONG_2021 <- fread("Data/Base_Files/Hawaii_Data_LONG_2021.txt")
+load("Data/Base_Files/Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE.Rdata")
+load("Data/Archive/2019_PreCOVID/Hawaii_SGP.Rdata")
 
 
 ### Tidy up data
@@ -23,7 +25,7 @@ Hawaii_Data_LONG_2021[,VALID_CASE:="VALID_CASE"]
 Hawaii_Data_LONG_2021[,Year:=as.character(Year)]
 Hawaii_Data_LONG_2021[,IDNO:=as.character(IDNO)]
 Hawaii_Data_LONG_2021[,Gr:=as.character(as.numeric(Gr))]
-Hawaii_Data_LONG_2021[Gr %in% c("2", "9", "91"), VALID_CASE:="INVALID_CASE"]
+Hawaii_Data_LONG_2021[Gr %in% c("2", "9", "10", "12", "91"), VALID_CASE:="INVALID_CASE"]
 Hawaii_Data_LONG_2021[,DOE_Ethnic:=as.character(DOE_Ethnic)]
 Hawaii_Data_LONG_2021[,Fed7_Ethnic:=as.factor(Fed7_Ethnic)]
 levels(Hawaii_Data_LONG_2021$Fed7_Ethnic)[3] <- "Black or African American"
@@ -80,6 +82,63 @@ setkey(Hawaii_Data_LONG_2021, VALID_CASE, Year, Domain, Gr, IDNO, Scale_Score)
 setkey(Hawaii_Data_LONG_2021, VALID_CASE, Year, Domain, Gr, IDNO)
 Hawaii_Data_LONG_2021[which(duplicated(Hawaii_Data_LONG_2021, by=key(Hawaii_Data_LONG_2021)))-1, VALID_CASE:="INVALID_CASE"]
 
-### Save results
+### MERGE IN STUDENTS WHO WERE ENROLLED BUT DIDN'T TEST
 
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE <- Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE[!HSAType %in% c("A", "H")]
+variables.to.keep <- c("IDNo", "SchCode", "LName", "Fname", "Grade", "Sex", "FederalEthCode", "Fed7", "DisadvantagedFlag", "SLEPFlag", "SPEDFlag", "MigrantFlag", "FSYFlag", "ParticipationSubjects", "MathSS", "ReadSS")
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE <- Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE[,variables.to.keep, with=FALSE]
+setnames(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE, c("IDNO", "SCode_Admin_Rollup", "LName", "FName", "Gr", "Sex", "Fed5_Ethnic", "Fed7_Ethnic", "Disadv", "ELL", "SpEd", "Migrant", "FSY", "ParticipationSubjects", "MathSS", "ReadSS"))
+tmp.reading <- Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE[ParticipationSubjects %in% c("MR", "MRS", "R", "RS")][,MathSS:=NULL][,Domain:="READING"]
+tmp.math <- Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE[ParticipationSubjects %in% c("M", "MR", "MRS", "MS")][,ReadSS:=NULL][,Domain:="MATHEMATICS"]
+setnames(tmp.reading, "ReadSS", "Scale_Score")
+setnames(tmp.math, "MathSS", "Scale_Score")
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING <- rbindlist(list(tmp.math, tmp.reading))
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING <- Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[is.na(Scale_Score)][,ParticipationSubjects:=NULL]
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,Year:="2021"][,VALID_CASE:="VALID_CASE"]
+tmp.lookup <- unique(Hawaii_SGP@Data[VALID_CASE=="VALID_CASE", c("VALID_CASE", "SCHOOL_NUMBER", "GRADE", "EMH_LEVEL", "DISTRICT_NUMBER", "DISTRICT_NAME", "COMPLEX_NUMBER", "COMPLEX_NAME", "COMPLEX_AREA_NUMBER", "COMPLEX_AREA_NAME")], by=c("VALID_CASE", "SCHOOL_NUMBER", "GRADE"))
+setnames(tmp.lookup, c("VALID_CASE", "SCode_Admin_Rollup", "Gr", "EMH.Level", "DCode", "District", "CCode", "Complex", "CACode", "Complex.Area"))
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,SCode_Admin_Rollup:=as.character(SCode_Admin_Rollup)]
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,Gr:=as.character(Gr)]
+setkeyv(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING, c("VALID_CASE", "SCode_Admin_Rollup", "Gr"))
+setkeyv(tmp.lookup, c("VALID_CASE", "SCode_Admin_Rollup", "Gr"))
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING <- tmp.lookup[Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING]
+
+setcolorder(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING,
+	match(names(Hawaii_Data_LONG_2021), names(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING))[!is.na(match(names(Hawaii_Data_LONG_2021), names(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING)))])
+
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,IDNO:=as.character(IDNO)]
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,SCode_Admin_Rollup:=as.integer(SCode_Admin_Rollup)]
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,DCode:=as.integer(DCode)]
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,CCode:=as.integer(CCode)]
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,CACode:=as.integer(CACode)]
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,Sex:=as.factor(Sex)]
+levels(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING$Sex) <- c("Female", "Male")
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,Fed7_Ethnic:=as.factor(Fed7_Ethnic)]
+levels(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING$Fed7_Ethnic) <- c("American Indian or Alaska Native", "Asian", "Black or African American", "Hispanic", "Two or more races", "Pacific Islander", "White")
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,Fed5_Ethnic:=as.factor(Fed5_Ethnic)]
+levels(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING$Fed5_Ethnic) <- c("American Indian or Alaska Native", "Asian/Pacific Islander", "Black or African American", "Hispanic or Latino", "White")
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,Disadv:=as.factor(Disadv)]
+levels(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING$Disadv) <- c("Disadvantaged: No", "Disadvantaged: Yes")
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,ELL:=as.factor(ELL)]
+levels(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING$ELL) <- c("ELL: No", "ELL: Yes")
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,SpEd:=as.factor(SpEd)]
+levels(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING$SpEd) <- c("Special Education: No", "Special Education: Yes")
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,Migrant:=as.factor(Migrant)]
+levels(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING$Migrant) <- c("Migrant: No", "Migrant: Yes")
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,FSY:=as.factor(FSY)]
+levels(Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING$FSY) <- c("Full School Year Status: No", "Full School Year Status: Yes")
+Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING[,Scale_Score:=as.numeric(Scale_Score)]
+
+
+### rbind results
+
+Hawaii_Data_LONG_2021 <- rbindlist(list(Hawaii_Data_LONG_2021, Hawaii_Data_LONG_2021_ENROLLMENT_DATA_BASE_MISSING), fill=TRUE)
+Hawaii_Data_LONG_2021[is.na(Scale_Score), VALID_CASE:="INVALID_CASE"]
+
+### setkey
+
+setkey(Hawaii_Data_LONG_2021, VALID_CASE, Year, Domain, Gr, IDNO)
+
+
+### Save results
 save(Hawaii_Data_LONG_2021, file="Data/Hawaii_Data_LONG_2021.Rdata")

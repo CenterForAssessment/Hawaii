@@ -8,10 +8,10 @@
 require(SGP)
 
 ###   Load the results data from the 'official' 2019 SGP analyses
-load("Data/Hawaii_SGP_LONG_Data.Rdata")
+load("Data/Archive/2019_PreCOVID/Hawaii_SGP_LONG_Data.Rdata")
 
 ###   Create a smaller subset of the LONG data to work with.
-Hawaii_Baseline_Data <- data.table::data.table(Hawaii_SGP_LONG_Data[YEAR > 2015,
+Hawaii_Baseline_Data <- data.table::data.table(Hawaii_SGP_LONG_Data[YEAR >= 2015,
 	c("ID", "CONTENT_AREA", "YEAR", "GRADE", "SCALE_SCORE", "ACHIEVEMENT_LEVEL", "VALID_CASE"),])
 
 ###   Read in Baseline SGP Configuration Scripts and Combine

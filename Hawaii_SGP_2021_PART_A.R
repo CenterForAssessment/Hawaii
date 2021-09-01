@@ -11,6 +11,7 @@ require(SGPmatrices)
 ###   Load data
 load("Data/Hawaii_SGP.Rdata")
 load("Data/Hawaii_Data_LONG_2021.Rdata")
+load("Data/Hawaii_Data_LONG_2021_INSTRUCTOR_NUMBER.Rdata")
 
 ###   Add Baseline matrices to SGPstateData
 SGPstateData <- addBaselineMatrices("HI", "2021")
@@ -22,7 +23,7 @@ source("SGP_CONFIG/2021/PART_A/MATHEMATICS.R")
 HI_CONFIG <- c(READING_2021.config, MATHEMATICS_2021.config)
 
 ### Parameters
-parallel.config <- list(BACKEND="PARALLEL", WORKERS=list(PERCENTILES=4, BASELINE_PERCENTILES=4, PROJECTIONS=4, LAGGED_PROJECTIONS=4, SGP_SCALE_SCORE_TARGETS=4))
+parallel.config <- list(BACKEND="PARALLEL", WORKERS=list(PERCENTILES=4, BASELINE_PERCENTILES=4, PROJECTIONS=4, LAGGED_PROJECTIONS=4, SGP_SCALE_SCORE_TARGETS=4, SUMMARY=4))
 
 #####
 ###   Run updateSGP analysis
@@ -31,7 +32,8 @@ parallel.config <- list(BACKEND="PARALLEL", WORKERS=list(PERCENTILES=4, BASELINE
 Hawaii_SGP <- updateSGP(
         what_sgp_object = Hawaii_SGP,
         with_sgp_data_LONG = Hawaii_Data_LONG_2021,
-        steps = c("prepareSGP", "analyzeSGP", "combineSGP"),
+        with_sgp_data_INSTRUCTOR_NUMBER = Hawaii_Data_LONG_2021_INSTRUCTOR_NUMBER,
+        steps = c("prepareSGP", "analyzeSGP", "combineSGP", "summarizeSGP"),
         sgp.config = HI_CONFIG,
         sgp.percentiles = TRUE,
         sgp.projections = FALSE,
