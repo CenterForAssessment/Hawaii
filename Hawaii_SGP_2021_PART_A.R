@@ -45,5 +45,10 @@ Hawaii_SGP <- updateSGP(
         parallel.config = parallel.config
 )
 
+### Copy SCALE_SCORE_PRIOR and SCALE_SCORE_PRIOR_STANDARDIZED to BASELINE counter parts
+Hawaii_SGP@Data[YEAR=="2021", SCALE_SCORE_PRIOR_BASELINE:=SCALE_SCORE_PRIOR]
+Hawaii_SGP@Data[YEAR=="2021", SCALE_SCORE_PRIOR_STANDARDIZED_BASELINE:=SCALE_SCORE_PRIOR_STANDARDIZED]
+
+
 ###   Save results
 save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
