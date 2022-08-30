@@ -31,7 +31,7 @@ parallel.config <- list(BACKEND="PARALLEL", WORKERS=list(PERCENTILES=4, BASELINE
 Hawaii_SGP <- updateSGP(
         what_sgp_object = Hawaii_SGP,
         with_sgp_data_LONG = Hawaii_Data_LONG_2022,
-        steps = c("prepareSGP", "analyzeSGP", "combineSGP", "outputSGP"),
+        steps = c("prepareSGP", "analyzeSGP", "combineSGP", "summarizeSGP", "outputSGP"),
         sgp.config = HI_CONFIG,
         sgp.percentiles = TRUE,
         sgp.projections = TRUE,

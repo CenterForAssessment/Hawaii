@@ -11,11 +11,10 @@ require(data.table)
 
 ### Load tab delimited data
 Hawaii_Data_LONG_2022 <- fread("Data/Base_Files/Hawaii_Data_LONG_2022.txt")
-load("Data/Archive/2019_PreCOVID/Hawaii_SGP.Rdata")
+FSY_Update <- fread("Data/Base_Files/FSYFor297and568.csv")
 
 
 ### Tidy up data
-
 setnames(Hawaii_Data_LONG_2022, c("Valid_Case", "grade", "lastName", "firstName", "EMH Level", "ELL Status", "Complex Area"),
 	c("VALID_CASE", "Gr", "LName", "FName", "EMH.Level", "ELL_STATUS_MULTILEVEL", "Complex.Area"))
 Hawaii_Data_LONG_2022[,VALID_CASE:="VALID_CASE"]
@@ -66,12 +65,21 @@ Hawaii_Data_LONG_2022[,SCHOOL_FSY_ENROLLMENT_STATUS:=factor(2, levels=1:2, label
 Hawaii_Data_LONG_2022$SCHOOL_FSY_ENROLLMENT_STATUS[Hawaii_Data_LONG_2022$SCHOOL_ENROLLMENT_STATUS=="Enrolled School: No" | Hawaii_Data_LONG_2022$FSY=="Full School Year Status: No"] <- "Enrolled School: No"
 
 ### Reorder variables
-
 my.variable.order <- c("VALID_CASE", "Domain", "Year", "Gr", "IDNO", "LName", "FName", "SCode_Admin_Rollup", "School_Admin_Rollup", "FSY_SchCode", "EMH.Level", "DCode", "District", "CCode", "Complex",
 	"CACode", "Complex.Area", "Sex", "ETHNICITY", "HIGH_NEED_STATUS_DEMOGRAPHIC", "DOE_Ethnic", "Fed7_Ethnic", "Fed5_Ethnic", "Disadv", "ELL", "ELL_STATUS_MULTILEVEL", "SpEd",
 	"Migrant", "Scale_Score", "Proficiency_Level", "FSY", "SCHOOL_ENROLLMENT_STATUS", "DISTRICT_ENROLLMENT_STATUS", "COMPLEX_ENROLLMENT_STATUS", "COMPLEX_AREA_ENROLLMENT_STATUS",
 	"STATE_ENROLLMENT_STATUS", "SCHOOL_FSY_ENROLLMENT_STATUS")
 setcolorder(Hawaii_Data_LONG_2022, my.variable.order)
+
+### Update FSY status
+setnames(FSY_Update, c("IDNo", "Grade"), c("ID", "GRADE"))
+FSY_Update[,ID:=as.character(ID)]
+setkey(FSY_Update, ID)
+Hawaii_Data_LONG_2022[IDNO %in% FSY_Update$ID, FSY:="Full School Year Status: Yes"]
+Hawaii_Data_LONG_2022[IDNO %in% FSY_Update$ID, SCHOOL_ENROLLMENT_STATUS:="Enrolled School: Yes"]
+Hawaii_Data_LONG_2022[IDNO %in% FSY_Update$ID, SCHOOL_FSY_ENROLLMENT_STATUS:="Enrolled School: Yes"]
+Hawaii_Data_LONG_2022[IDNO %in% FSY_Update$ID, COMPLEX_ENROLLMENT_STATUS:="Enrolled Complex: Yes"]
+Hawaii_Data_LONG_2022[IDNO %in% FSY_Update$ID, COMPLEX_AREA_ENROLLMENT_STATUS:="Enrolled Complex Area: Yes"]
 
 ### Check for duplicates
 setkey(Hawaii_Data_LONG_2022, VALID_CASE, Year, Domain, Gr, IDNO, Scale_Score)
