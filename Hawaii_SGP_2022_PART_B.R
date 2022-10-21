@@ -1,3 +1,4 @@
+#+ include = FALSE, purl = FALSE, eval = FALSE
 ######################################################################################
 ###                                                                                ###
 ###                Hawaii SGP analyses for 2022   .                                ###
@@ -46,3 +47,25 @@ Hawaii_SGP <- updateSGP(
 
 ###   Save results
 save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
+
+#' #### 2022 Analyses, Part B
+#' 
+#' In the second part of the 2022 analyses, we calculate "consecutive-year"
+#' cohort- and baseline-referenced SGPs concurrently for grades 3 through 8
+#' mathematics and ELA. Both SGP analysis versions use only a single prior
+#' (i.e. 2021).
+#' 
+#' In the calculation workflow, we again first add the pre-calculated baseline
+#' matrices to `SGPstateData` via the `SGPmatrices` package and load the 2022
+#' configuration scripts to specify the analyses.
+#'
+#' In this part we use the [`updateSGP`](https://www.rdocumentation.org/packages/SGP/versions/2.0-0.0/topics/updateSGP)
+#' function to ***a)*** prepare the `Hawaii_SGP` object used in Part A and add
+#' the cleaned and formatted 2022 data (`prepareSGP`), ***b)*** calculate 2022
+#' consecutive-year cohort- and baseline-referenced SGP estimates and growth
+#' projections (`analyzeSGP` step), ***c)*** merge the results into the master
+#' longitudinal data set (`combineSGP` step), ***d)*** create summary tables
+#' disaggregated at the state, district, complex and school levels
+#' ([`summarizeSGP`](https://www.rdocumentation.org/packages/SGP/versions/2.0-0.0/topics/updateSGP) step)
+#' and ***e)*** save the results in both `.Rdata` and pipe delimited versions
+#' ([`outputSGP`](https://www.rdocumentation.org/packages/SGP/versions/2.0-0.0/topics/outputSGP) step).

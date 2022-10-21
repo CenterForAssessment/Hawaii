@@ -1,3 +1,4 @@
+#+ include = FALSE, purl = FALSE, eval = FALSE
 #########################################################################################
 ###                                                                                   ###
 ###          Hawaii 2019 consecutive-year BASELINE SGP analyses                       ###
@@ -68,3 +69,56 @@ Hawaii_SGP <-
 
 ###   Save results
 save(Hawaii_SGP, file = "Data/Hawaii_SGP.Rdata")
+
+
+#' ### Conduct SGP analyses
+#' 
+#' All data analysis is conducted using the [`R` Software Environment](http://www.r-project.org/)
+#' in conjunction with the [`SGP` package](http://sgp.io/). Cohort- and
+#' baseline-referenced SGPs were calculated in two parts for the 2022 Hawai'i
+#' SBA growth model analyses. Each part of the 2022 analyses were completed in
+#' these 5 steps:
+#'
+#' 1. `prepareSGP`
+#' 2. `analyzeSGP`
+#' 3. `combineSGP`
+#' 4. `summarizeSGP`
+#' 5. `outputSGP`
+#' 
+#' Because these steps are almost always conducted simultaneously, the `SGP`
+#' package has wrapper functions, `abcSGP` and `updateSGP`, that combine the
+#' above steps into a single function call and simplify the source code
+#' associated with the data analysis. Documentation for all SGP functions are
+#' [available online.](https://cran.r-project.org/web/packages/SGP/SGP.pdf)
+#' 
+#' #### 2022 Analyses, Part A
+#' 
+#' In the first part of the 2022 analyses, we first calculated "consecutive-year"
+#' baseline-referenced SGPs for grades 3 through 8 in both mathematics and
+#' ELA^[11<sup>th</sup> grade analyses require a two-year skip grade progression and were therefore were excluded from consecutive-year analyses.].
+#' These baseline SGP analyses use up to three consecutive years of data (i.e. 2018
+#' and 2017 as priors and 2019 as the current year), meaning they are roughly
+#' analogous to the original 2019 cohort-referenced analyses. These analyses are
+#' necessary to provide a direct comparison with the 2022 baseline-referenced
+#' results.
+#' 
+#' These analyses also differ from the 2019 baseline-referenced growth analyses
+#' conducted in 2021, which were skip-year analyses (i.e. 2017 and 2016, when
+#' available, used as priors with 2019 as the current year) used to compare with
+#' the 2021 skip-year SGP analyses that used 2019 and 2018 (if/when available) as
+#' priors for the 2021 scores.
+#' 
+#' In the calculation workflow, we first added the pre-calculated baseline matrices
+#' to the Hawai'i entry in the `SGPstateData` object using the `addBaselineMatrices`
+#' function from the `SGPmatrices` package (which also serves as a repository for
+#' the baseline matrices). The 2019 configuration scripts were loaded and combined
+#' into a single list object that serves to specify the exact analyses to be run.
+#'
+#' We then used the [`abcSGP`](https://www.rdocumentation.org/packages/SGP/versions/2.0-0.0/topics/abcSGP)
+#' function to ***a)*** prepare and validate the `Hawaii_SGP` data object contents
+#' ([`prepareSGP`](https://www.rdocumentation.org/packages/SGP/versions/2.0-0.0/topics/prepareSGP)
+#' step), ***b)*** calculate 2019 consecutive-year baseline SGP estimates
+#' ([`analyzeSGP`](https://www.rdocumentation.org/packages/SGP/versions/2.0-0.0/topics/analyzeSGP)
+#' step) and ***c)*** merge the results into the master longitudinal data set
+#' ([`combineSGP`](https://www.rdocumentation.org/packages/SGP/versions/2.0-0.0/topics/combineSGP)
+#' step).
