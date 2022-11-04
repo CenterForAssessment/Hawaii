@@ -16,13 +16,12 @@
 #' values and factor levels that have been used in previous years or as
 #' required to conform to the `SGP` package conventions.
 #' 
-#' An auxilary data set
-#' with information regarding the full school year attendance for select
-#' students is then used to verify and modify (if necessary) the enrollment
-#' status variables. This will ensure that any subsequent school, district and
-#' complex growth and achievement aggregates that are produced after the SGP
-#' calculations will contain the appropriate students. Note that this does not
-#' impact which students will be included in the growth calculations.
+#' An auxiliary data set with information regarding the full school year
+#' attendance for select students is then used to verify and modify (if necessary)
+#' the enrollment status variables. This will ensure that any subsequent school,
+#' district and complex growth and achievement aggregates that are produced
+#' after the SGP calculations will contain the appropriate students. Note that
+#' this does not impact which students will be included in the growth calculations.
 #'
 #' Finally, the 2022 SBA data was examined to identify invalid records. 
 #' Student records were flagged as "invalid" based on the following criteria:
@@ -45,7 +44,7 @@ FSY_Update <- fread("Data/Base_Files/FSYFor297and568.csv")
 
 ### Tidy up data
 setnames(Hawaii_Data_LONG_2022, c("Valid_Case", "grade", "lastName", "firstName", "EMH Level", "ELL Status", "Complex Area"),
-	c("VALID_CASE", "Gr", "LName", "FName", "EMH.Level", "ELL_STATUS_MULTILEVEL", "Complex.Area"))
+    c("VALID_CASE", "Gr", "LName", "FName", "EMH.Level", "ELL_STATUS_MULTILEVEL", "Complex.Area"))
 Hawaii_Data_LONG_2022[,VALID_CASE:="VALID_CASE"]
 Hawaii_Data_LONG_2022[,Year:=as.character(Year)]
 Hawaii_Data_LONG_2022[,IDNO:=as.character(IDNO)]
@@ -95,9 +94,9 @@ Hawaii_Data_LONG_2022$SCHOOL_FSY_ENROLLMENT_STATUS[Hawaii_Data_LONG_2022$SCHOOL_
 
 ### Reorder variables
 my.variable.order <- c("VALID_CASE", "Domain", "Year", "Gr", "IDNO", "LName", "FName", "SCode_Admin_Rollup", "School_Admin_Rollup", "FSY_SchCode", "EMH.Level", "DCode", "District", "CCode", "Complex",
-	"CACode", "Complex.Area", "Sex", "ETHNICITY", "HIGH_NEED_STATUS_DEMOGRAPHIC", "DOE_Ethnic", "Fed7_Ethnic", "Fed5_Ethnic", "Disadv", "ELL", "ELL_STATUS_MULTILEVEL", "SpEd",
-	"Migrant", "Scale_Score", "Proficiency_Level", "FSY", "SCHOOL_ENROLLMENT_STATUS", "DISTRICT_ENROLLMENT_STATUS", "COMPLEX_ENROLLMENT_STATUS", "COMPLEX_AREA_ENROLLMENT_STATUS",
-	"STATE_ENROLLMENT_STATUS", "SCHOOL_FSY_ENROLLMENT_STATUS")
+    "CACode", "Complex.Area", "Sex", "ETHNICITY", "HIGH_NEED_STATUS_DEMOGRAPHIC", "DOE_Ethnic", "Fed7_Ethnic", "Fed5_Ethnic", "Disadv", "ELL", "ELL_STATUS_MULTILEVEL", "SpEd",
+    "Migrant", "Scale_Score", "Proficiency_Level", "FSY", "SCHOOL_ENROLLMENT_STATUS", "DISTRICT_ENROLLMENT_STATUS", "COMPLEX_ENROLLMENT_STATUS", "COMPLEX_AREA_ENROLLMENT_STATUS",
+    "STATE_ENROLLMENT_STATUS", "SCHOOL_FSY_ENROLLMENT_STATUS")
 setcolorder(Hawaii_Data_LONG_2022, my.variable.order)
 
 ### Update FSY status
@@ -110,6 +109,158 @@ Hawaii_Data_LONG_2022[IDNO %in% FSY_Update$ID, SCHOOL_FSY_ENROLLMENT_STATUS:="En
 Hawaii_Data_LONG_2022[IDNO %in% FSY_Update$ID, COMPLEX_ENROLLMENT_STATUS:="Enrolled Complex: Yes"]
 Hawaii_Data_LONG_2022[IDNO %in% FSY_Update$ID, COMPLEX_AREA_ENROLLMENT_STATUS:="Enrolled Complex Area: Yes"]
 
+###   MERGE IN STUDENTS WHO WERE ENROLLED BUT DIDN'T TEST
+###   Done in November after analyses run - added to final datasets
+
+require(Hmisc)
+mdb_path <-
+    paste0(
+        "'", getwd(),
+        "/Data/Base_Files/2022FinaltblAnalysisData-formattedforDamian.mdb'"
+    )
+mdb.get(mdb_path, tables = TRUE)
+Hawaii_Enrollment_Data_2022 <-
+    mdb.get(mdb_path, tables = "tblSBAStudents2022") |> as.data.table()
+
+variables.to.keep <-
+    c("IDNo", "SchCode", "LName", "Fname", "Grade", "Sex", "FederalEthCode",
+      "Fed7", "DisadvantagedFlag", "SLEPFlag", "SPEDFlag", "MigrantFlag",
+      "FSYFlag", "ParticipationSubjects", "MathSS", "ReadSS", "MathParD", "ELAParD"
+    )
+Hawaii_Enrollment_Data_2022 <-
+    Hawaii_Enrollment_Data_2022[, variables.to.keep, with = FALSE]
+setnames(
+    Hawaii_Enrollment_Data_2022,
+    c("IDNO", "SCode_Admin_Rollup", "LName", "FName", "Gr", "Sex", "Fed5_Ethnic",
+      "Fed7_Ethnic", "Disadv", "ELL", "SpEd", "Migrant",
+      "FSY", "ParticipationSubjects", "MathSS", "ReadSS", "MathParD", "ELAParD"
+    )
+)
+Hawaii_Enrollment_Data_2022[, 
+    SCHOOL_FSY_ENROLLMENT_STATUS := "Enrolled School: Yes"][,
+    SCHOOL_ENROLLMENT_STATUS := "Enrolled School: Yes"
+]
+
+tmp.reading <-
+    Hawaii_Enrollment_Data_2022[
+        ParticipationSubjects %in% c("MR", "MRS", "R", "RS")][,
+            c("MathSS", "MathParD") := NULL
+        ][,
+            Domain := "READING"
+        ]
+setnames(tmp.reading, c("ReadSS", "ELAParD"), c("Scale_Score", "ParD"))
+tmp.math <-
+    Hawaii_Enrollment_Data_2022[
+        ParticipationSubjects %in% c("M", "MR", "MRS", "MS")][,
+            c("ReadSS", "ELAParD") := NULL
+        ][,
+            Domain := "MATHEMATICS"
+        ]
+setnames(tmp.math, c("MathSS", "MathParD"), c("Scale_Score", "ParD"))
+
+Hawaii_Missing_Data_2022 <- rbindlist(list(tmp.math, tmp.reading))
+Hawaii_Missing_Data_2022 <-
+    Hawaii_Missing_Data_2022[is.na(Scale_Score)][,
+        ParticipationSubjects := NULL
+    ][,
+        VALID_CASE := "VALID_CASE"
+    ]
+Hawaii_Missing_Data_2022[
+    ParD == 0,
+    c("SCHOOL_FSY_ENROLLMENT_STATUS", "SCHOOL_ENROLLMENT_STATUS") :=
+      "Enrolled School: No"
+][, ParD := NULL]
+
+tmp.lookup <-
+    Hawaii_Data_LONG_2022[VALID_CASE == "VALID_CASE",
+        c("VALID_CASE", "SCode_Admin_Rollup", "Gr", "EMH.Level",
+          "DCode", "District", "CCode", "Complex", "CACode", "Complex.Area"
+        )] |> unique(by = c("VALID_CASE", "SCode_Admin_Rollup", "Gr"))
+Hawaii_Missing_Data_2022[, Gr := as.character(Gr)]
+setkeyv(Hawaii_Missing_Data_2022, c("VALID_CASE", "SCode_Admin_Rollup", "Gr"))
+setkeyv(tmp.lookup, c("VALID_CASE", "SCode_Admin_Rollup", "Gr"))
+Hawaii_Missing_Data_2022 <- tmp.lookup[Hawaii_Missing_Data_2022]
+
+setcolorder(
+    Hawaii_Missing_Data_2022,
+    match(
+        names(Hawaii_Data_LONG_2022),
+        names(Hawaii_Missing_Data_2022)
+    )[!is.na(match(names(Hawaii_Data_LONG_2022), names(Hawaii_Missing_Data_2022)))]
+)
+
+Hawaii_Missing_Data_2022[,
+    IDNO := as.character(IDNO)][,
+    DCode := as.integer(DCode)][,
+    CCode := as.integer(CCode)][,
+    CACode := as.integer(CACode)][,
+    Scale_Score := as.numeric(Scale_Score)][,
+    Sex := as.factor(Sex)][,
+    ELL := as.factor(ELL)][,
+    SpEd := as.factor(SpEd)][,
+    Disadv := as.factor(Disadv)][,
+    Migrant := as.factor(Migrant)][,
+    Fed5_Ethnic := as.factor(Fed5_Ethnic)][,
+    Fed7_Ethnic := as.factor(Fed7_Ethnic)][,
+    FSY := as.factor(FSY)][,
+    SCHOOL_ENROLLMENT_STATUS := as.factor(SCHOOL_ENROLLMENT_STATUS)][,
+    SCHOOL_FSY_ENROLLMENT_STATUS := as.factor(SCHOOL_FSY_ENROLLMENT_STATUS)
+]
+levels(Hawaii_Missing_Data_2022$Sex) <-
+    c("Female", "Male")
+levels(Hawaii_Missing_Data_2022$ELL) <-
+    c("ELL: No", "ELL: Yes")
+levels(Hawaii_Missing_Data_2022$SpEd) <-
+    c("Special Education: No", "Special Education: Yes")
+levels(Hawaii_Missing_Data_2022$Disadv) <-
+    c("Disadvantaged: No", "Disadvantaged: Yes")
+levels(Hawaii_Missing_Data_2022$Migrant) <-
+    c("Migrant: No", "Migrant: Yes")
+levels(Hawaii_Missing_Data_2022$Fed7_Ethnic) <-
+    c("American Indian or Alaska Native", "Asian", "Black or African American",
+      "Hispanic", "Two or more races", "Pacific Islander", "White"
+    )
+levels(Hawaii_Missing_Data_2022$Fed5_Ethnic) <-
+    c("American Indian or Alaska Native", "Asian/Pacific Islander",
+      "Black or African American", "Hispanic or Latino", "White"
+    )
+levels(Hawaii_Missing_Data_2022$FSY) <-
+    c("Full School Year Status: No", "Full School Year Status: Yes")
+
+
+### rbind results
+Hawaii_Data_LONG_2022 <-
+    rbindlist(
+        list(
+            Hawaii_Data_LONG_2022,
+            Hawaii_Missing_Data_2022
+        ),
+        fill = TRUE
+    )
+Hawaii_Data_LONG_2022[is.na(Scale_Score), VALID_CASE := "INVALID_CASE"]
+
+###   Fix/output 2022 results files
+setNamesSGP(Hawaii_Missing_Data_2022)
+Hawaii_Missing_Data_2022[,
+    VALID_CASE := "INVALID_CASE"][,
+    YEAR := "2022"
+]
+
+load("Data/Hawaii_SGP.Rdata")
+
+Hawaii_SGP@Data <-
+    rbindlist(
+        list(
+            Hawaii_SGP@Data,
+            Hawaii_Missing_Data_2022
+        ),
+        fill = TRUE
+    )
+
+outputSGP(Hawaii_SGP)
+
+save(Hawaii_SGP, file = "Data/Hawaii_SGP.Rdata")
+
 ### Check for duplicates
 setkey(Hawaii_Data_LONG_2022, VALID_CASE, Year, Domain, Gr, IDNO, Scale_Score)
 setkey(Hawaii_Data_LONG_2022, VALID_CASE, Year, Domain, Gr, IDNO)
@@ -117,7 +268,6 @@ Hawaii_Data_LONG_2022[which(duplicated(Hawaii_Data_LONG_2022, by=key(Hawaii_Data
 
 ### setkey
 setkey(Hawaii_Data_LONG_2022, VALID_CASE, Year, Domain, Gr, IDNO)
-
 
 ### Save results
 save(Hawaii_Data_LONG_2022, file="Data/Hawaii_Data_LONG_2022.Rdata")

@@ -51,7 +51,7 @@ save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
 #' #### 2022 Analyses, Part B
 #' 
 #' In the second part of the 2022 analyses, we calculate "consecutive-year"
-#' cohort- and baseline-referenced SGPs concurrently for grades 3 through 8
+#' cohort- and baseline-referenced SGPs concurrently for grades 4 through 8
 #' mathematics and ELA. Both SGP analysis versions use only a single prior
 #' (i.e. 2021).
 #' 

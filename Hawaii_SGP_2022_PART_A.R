@@ -94,7 +94,7 @@ save(Hawaii_SGP, file = "Data/Hawaii_SGP.Rdata")
 #' #### 2022 Analyses, Part A
 #' 
 #' In the first part of the 2022 analyses, we first calculated "consecutive-year"
-#' baseline-referenced SGPs for grades 3 through 8 in both mathematics and
+#' baseline-referenced SGPs for grades 4 through 8 in both mathematics and
 #' ELA^[11<sup>th</sup> grade analyses require a two-year skip grade progression and were therefore were excluded from consecutive-year analyses.].
 #' These baseline SGP analyses use up to three consecutive years of data (i.e. 2018
 #' and 2017 as priors and 2019 as the current year), meaning they are roughly
