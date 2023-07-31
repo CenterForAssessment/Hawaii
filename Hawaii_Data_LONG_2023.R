@@ -1,4 +1,3 @@
-#+ include = FALSE, purl = FALSE
 ###########################################################################
 ###
 ###   R Syntax for construction of 2023 Hawaii LONG data file
@@ -30,7 +29,11 @@
 #' * Students with duplicate records. In these instances, a student's highest
 #'   scale score is retained as the "valid" case for the SGP analyses.
 
-#+ include = FALSE, purl = FALSE, eval = FALSE
+###########################################################################
+###
+### R Syntax for construction of 2023 Hawaii LONG data file
+###
+###########################################################################
 
 ### Load SGP Package
 require(SGP)

@@ -1,4 +1,3 @@
-#+ include = FALSE, purl = FALSE, eval = FALSE
 ######################################################################################
 ###                                                                                ###
 ###                Hawaii SGP analyses for 2023                                    ###
@@ -45,6 +44,7 @@ Hawaii_SGP <- updateSGP(
 )
 
 ###   Save results
+<<<<<<< HEAD
 save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
 
 
@@ -90,3 +90,5 @@ save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
 #' step) and ***e)*** save the results in both `.Rdata` and pipe delimited versions
 #' ([`outputSGP`](https://www.rdocumentation.org/packages/SGP/versions/2.0-0.0/topics/outputSGP)
 #' step).
+=======
+save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
