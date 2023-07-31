@@ -29,6 +29,8 @@ HI_2019_Baseline_Config <- c(
 ###   Update SGPstateData with grade/course/lag progression information
 source("SGP_CONFIG/2019/BASELINE/Projections/Skip_Year_Projections_MetaData.R")
 
+Hawaii_SGP@SGP$SGProjections <- NULL
+
 Hawaii_SGP <- abcSGP(
         sgp_object = Hawaii_SGP,
         steps = c("prepareSGP", "analyzeSGP"), # no changes to @Data - don't combine or output
@@ -40,11 +42,12 @@ Hawaii_SGP <- abcSGP(
         sgp.projections.baseline = TRUE, # Need P50_PROJ_YEAR_1_CURRENT for Ho's Fair Trend/Equity Check metrics
         sgp.projections.lagged.baseline = FALSE,
         save.intermediate.results = FALSE,
-        parallel.config = list(
-		BACKEND = "PARALLEL",
-		WORKERS=list(PROJECTIONS=8))
+	parallel.config = NULL
+#        parallel.config = list(
+#		BACKEND = "PARALLEL",
+#		WORKERS=list(PROJECTIONS=8))
 )
 
 ###   Save results
 
-save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
+#save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")

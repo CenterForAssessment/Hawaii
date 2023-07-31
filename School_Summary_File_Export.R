@@ -12,7 +12,7 @@ require(data.table)
 
 ### Load Hawaii SGP object
 
-#load("Data/Hawaii_SGP.Rdata")
+load("Data/Hawaii_SGP.Rdata")
 
 
 ### Create summary files
