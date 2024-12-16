@@ -1,8 +1,36 @@
+#+ include = FALSE, purl = FALSE
 ###########################################################################
 ###
-### R Syntax for construction of 2024 Hawaii LONG data file
+###   R Syntax for construction of 2024 Hawaii LONG data file
 ###
 ###########################################################################
+
+#' ## Data Preparation
+#' 
+#' The data preparation step involves taking data provided by the HIDOE and
+#' producing a `.Rdata` file that will subsequently be analyzed using the `SGP`
+#' software. This process is carried out annually as new data becomes available.
+#' 
+#' For the 2024 Hawai'i SBA data preparation and cleaning, we first modify
+#' values of student demographic and enrollment status variables to match with
+#' values and factor levels that have been used in previous years or as
+#' required to conform to the `SGP` package conventions.
+#' 
+#' The full school year attendance for students is then used to verify and
+#' modify (if necessary) the enrollment status variables. This will ensure that
+#' any subsequent school, district and complex growth and achievement aggregates
+#' that are produced after the SGP calculations will contain the appropriate
+#' students. Note that  this does not impact which students will be included in
+#' the growth calculations.
+#'
+#' Finally, the 2024 SBA data was examined to identify invalid records. 
+#' Student records were flagged as "invalid" based on the following criteria:
+#'
+#' * Student records with a `GRADE` level value outside of the 3-8 and 11 range.
+#' * Students with duplicate records. In these instances, a student's highest
+#'   scale score is retained as the "valid" case for the SGP analyses.
+
+#+ include = FALSE, purl = FALSE, eval = FALSE
 
 ### Load SGP Package
 require(SGP)

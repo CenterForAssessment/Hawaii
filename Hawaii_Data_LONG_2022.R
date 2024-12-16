@@ -171,6 +171,8 @@ Hawaii_Missing_Data_2022[
       "Enrolled School: No"
 ][, ParD := NULL]
 
+Hawaii_Missing_Data_2022[, YEAR := "2022"]
+
 tmp.lookup <-
     Hawaii_Data_LONG_2022[VALID_CASE == "VALID_CASE",
         c("VALID_CASE", "SCode_Admin_Rollup", "Gr", "EMH.Level",
