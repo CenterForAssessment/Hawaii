@@ -10,8 +10,8 @@ require(data.table)
 
 
 ### Load tab delimited data
-Hawaii_Data_LONG_2025 <- fread("Data/Base_Files/Hawaii_Data_LONG_2025_PRELIM.txt")
-#Hawaii_Data_LONG_2025 <- fread("Data/Base_Files/Hawaii_Data_LONG_2025_FINAL.txt")
+#Hawaii_Data_LONG_2025 <- fread("Data/Base_Files/Hawaii_Data_LONG_2025_PRELIM.txt")
+Hawaii_Data_LONG_2025 <- fread("Data/Base_Files/Hawaii_Data_LONG_2025_FINAL.txt")
 
 
 ### Tidy up data

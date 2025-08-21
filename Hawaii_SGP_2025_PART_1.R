@@ -47,4 +47,4 @@ Hawaii_SGP <- updateSGP(
 
 
 ###   Save results
-#save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
+save(Hawaii_SGP, file="Data/Hawaii_SGP.Rdata")
